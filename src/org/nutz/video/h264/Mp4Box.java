@@ -2,7 +2,6 @@ package org.nutz.video.h264;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,11 +24,12 @@ public class Mp4Box {
             while (dis.available() > 0) {
                 int size = dis.readInt();
                 String typeName = readTypeName();
+//                System.out.printf("typeName=%s, size=%d\n",typeName, size);
                 if ("moov".endsWith(typeName)) {
                     readMoov(size);
                     break;
                 } else {
-                    dis.skip(size - 8);
+                    dis.skipBytes(size - 8);
                     continue;
                 }
             }
@@ -65,7 +65,7 @@ public class Mp4Box {
 			if ("tkhd".equals(typeName)) {
 				dis.skip(size - 8 - 8);
 				int width = dis.readInt();
-				System.out.println("width=" + width);
+//				System.out.println("width=" + width);
 				dis.skip(4);
 				if (width == 0) {
 					dis.skip(trakSize - size - 8);
@@ -115,7 +115,7 @@ public class Mp4Box {
 						chunkOffsets = new int[count];
 						for (int i = 0; i < count; i++) {
 							chunkOffsets[i] = dis.readInt();
-							System.out.println("> " + chunkOffsets[i]);
+//							System.out.println("> " + chunkOffsets[i]);
 						}
 						trakSize -= size;
 						return true;
@@ -130,7 +130,7 @@ public class Mp4Box {
 		byte[] buf = new byte[4];
 		dis.readFully(buf);
 		String str = new String(buf);
-		System.out.println("TypeName = " + str);
+//		System.out.println("TypeName = " + str);
 		return str;
 	}
 
@@ -138,8 +138,8 @@ public class Mp4Box {
         return chunkOffsets;
     }
 	
-	public static final synchronized void main(String _你妹[]) throws Throwable {
-        FileInputStream in = new FileInputStream("H:/X.mp4");
-        new Mp4Box().load(in);
-    }
+//	public static final synchronized void main(String _你妹[]) throws Throwable {
+//        FileInputStream in = new FileInputStream("H:/X2.mp4");
+//        new Mp4Box().load(in);
+//    }
 }
