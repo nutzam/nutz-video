@@ -51,7 +51,7 @@ public class Mp4Box {
 				if (readTrak(size))
 					return;
 			} else {
-				dis.skip(size - 8);
+				dis.skipBytes(size - 8);
 			}
 			moovSize -= size;
 		}
@@ -63,18 +63,18 @@ public class Mp4Box {
 			int size = dis.readInt();
 			String typeName = readTypeName();
 			if ("tkhd".equals(typeName)) {
-				dis.skip(size - 8 - 8);
+				dis.skipBytes(size - 8 - 8);
 				int width = dis.readInt();
 //				System.out.println("width=" + width);
-				dis.skip(4);
+				dis.skipBytes(4);
 				if (width == 0) {
-					dis.skip(trakSize - size - 8);
+					dis.skipBytes(trakSize - size - 8);
 					return false;
 				}
 				continue;
 			}
 			if (!"mdia".equals(typeName)) {
-				dis.skip(size - 8);
+				dis.skipBytes(size - 8);
 				trakSize -= size;
 				continue;
 			}
@@ -84,7 +84,7 @@ public class Mp4Box {
 				size = dis.readInt();
 				typeName = readTypeName();
 				if (!"minf".equals(typeName)) {
-					dis.skip(size - 8);
+					dis.skipBytes(size - 8);
 					mdiaSize -= size;
 					continue;
 				}
@@ -95,7 +95,7 @@ public class Mp4Box {
 					size = dis.readInt();
 					typeName = readTypeName();
 					if (!"stbl".equals(typeName)) {
-						dis.skip(size - 8);
+						dis.skipBytes(size - 8);
 						minfSize -= size;
 						continue;
 					}
@@ -106,11 +106,11 @@ public class Mp4Box {
 						size = dis.readInt();
 						typeName = readTypeName();
 						if (!"stco".equals(typeName)) {
-							dis.skip(size - 8);
+							dis.skipBytes(size - 8);
 							stblSize -= size;
 							continue;
 						}
-						dis.skip(4);
+						dis.skipBytes(4);
 						int count = dis.readInt();
 						chunkOffsets = new int[count];
 						for (int i = 0; i < count; i++) {
